@@ -133,13 +133,13 @@ void CModbusSmSlave::ModbusWorkingArraysInit(void)
 
 //-------------------------------------------------------------------------------
 void CModbusSmSlave::WorkingArraysInit(uint8_t *puiCoils,
-                                     uint8_t *puiDiscreteInputs,
-                                     uint16_t *puiHoldingRegisters,
-                                     uint16_t *puiInputRegisters,
-                                     uint16_t uiCoilsNumber,
-                                     uint16_t uiDiscreteInputsNumber,
-                                     uint16_t uiHoldingRegistersNumber,
-                                     uint16_t uiInputRegistersNumber)
+                                       uint8_t *puiDiscreteInputs,
+                                       uint16_t *puiHoldingRegisters,
+                                       uint16_t *puiInputRegisters,
+                                       uint16_t uiCoilsNumber,
+                                       uint16_t uiDiscreteInputsNumber,
+                                       uint16_t uiHoldingRegistersNumber,
+                                       uint16_t uiInputRegistersNumber)
 {
 //    m_puiCoils = puiCoils;
 //    m_puiDiscreteInputs = puiDiscreteInputs;
@@ -153,9 +153,9 @@ void CModbusSmSlave::WorkingArraysInit(uint8_t *puiCoils,
 
 //-------------------------------------------------------------------------------
 void CModbusSmSlave::WorkingArraysCreate(uint16_t uiCoilsNumber,
-                                       uint16_t uiDiscreteInputsNumber,
-                                       uint16_t uiHoldingRegistersNumber,
-                                       uint16_t uiInputRegistersNumber)
+        uint16_t uiDiscreteInputsNumber,
+        uint16_t uiHoldingRegistersNumber,
+        uint16_t uiInputRegistersNumber)
 {
 //    m_puiCoils = new uint8_t(uiCoilsNumber);
 //    m_puiDiscreteInputs = new uint8_t(uiDiscreteInputsNumber);
@@ -186,10 +186,10 @@ void CModbusSmSlave::WorkingArraysDelete(void)
 //-------------------------------------------------------------------------------
 /* Builds a TCP request header */
 uint16_t CModbusSmSlave::RequestBasis(uint8_t uiSlave,
-                                    uint8_t uiFunctionCode,
-                                    uint16_t uiAddress,
-                                    uint16_t uiBitNumber,
-                                    uint8_t *puiRequest)
+                                      uint8_t uiFunctionCode,
+                                      uint16_t uiAddress,
+                                      uint16_t uiBitNumber,
+                                      uint8_t *puiRequest)
 {
 //    /* Extract from MODBUS Messaging on TCP/IP Implementation Guide V1.0b
 //       (page 23/46):
@@ -286,10 +286,10 @@ uint16_t CModbusSmSlave::ResponseException(uint8_t uiSlave, uint8_t uiFunctionCo
 
 //-------------------------------------------------------------------------------
 uint16_t CModbusSmSlave::ByteToBitPack(uint16_t uiAddress,
-                                     uint16_t uiNumberB,
-                                     uint8_t *m_puiCoils,
-                                     uint8_t *puiResponse,
-                                     uint16_t uiLength)
+                                       uint16_t uiNumberB,
+                                       uint8_t *m_puiCoils,
+                                       uint8_t *puiResponse,
+                                       uint16_t uiLength)
 {
     uint8_t uiData = 0;
     uint8_t uiShift = 0;
@@ -548,7 +548,7 @@ void CModbusSmSlave::SetByteFromBits(uint8_t *dest, uint16_t index, const uint8_
 
 //-------------------------------------------------------------------------------
 void CModbusSmSlave::SetBytesFromBits(uint8_t *dest, uint16_t index, uint16_t nb_bits,
-                                    const uint8_t *tab_byte)
+                                      const uint8_t *tab_byte)
 {
     uint16_t i;
     uint16_t shift = 0;
@@ -564,7 +564,7 @@ void CModbusSmSlave::SetBytesFromBits(uint8_t *dest, uint16_t index, uint16_t nb
 
 //-------------------------------------------------------------------------------
 uint8_t CModbusSmSlave::GetByteFromBits(const uint8_t *src, uint16_t index,
-                                      uint16_t nb_bits)
+                                        uint16_t nb_bits)
 {
     uint16_t i;
     uint8_t value = 0;
@@ -631,67 +631,67 @@ uint8_t CModbusSmSlave::Fsm(void)
 
     case INIT:
 //        std::cout << "CModbusSmSlave::Fsm INIT 1"  << std::endl;
-        {
-            CTaskInterface* pxTask =
-                GetResources() ->
-                GetTaskPointerByNameFromMap(m_sModbusSlaveLinkLayerName);
+    {
+        CTaskInterface* pxTask =
+            GetResources() ->
+            GetTaskPointerByNameFromMap(m_sModbusSlaveLinkLayerName);
 
-            if (pxTask != 0)
-            {
+        if (pxTask != 0)
+        {
 //                std::cout << "CModbusSmSlave::Fsm INIT 2"  << std::endl;
-                if (pxTask -> GetFsmState() >= READY)
-                {
-//                    std::cout << "CModbusSmSlave::Fsm INIT 3"  << std::endl;
-                    SetModbusSlaveLinkLayer((CModbusSmSlaveLinkLayer*)pxTask);
-                    uiReadyTaskCounter += 1;
-//                    SetFsmState(READY);
-                }
-            }
-            else
+            if (pxTask -> GetFsmState() >= READY)
             {
+//                    std::cout << "CModbusSmSlave::Fsm INIT 3"  << std::endl;
+                SetModbusSlaveLinkLayer((CModbusSmSlaveLinkLayer*)pxTask);
+                uiReadyTaskCounter += 1;
+//                    SetFsmState(READY);
+            }
+        }
+        else
+        {
 //                std::cout << "CModbusSmSlave::Fsm INIT 4"  << std::endl;
-                if (GetTimerPointer() -> IsOverflow())
-                {
+            if (GetTimerPointer() -> IsOverflow())
+            {
                 std::cout << "CModbusSmSlave::Fsm INIT 5"  << std::endl;
-                    SetFsmState(STOP);
-                }
+                SetFsmState(STOP);
             }
         }
+    }
 
 
+    {
+        CTaskInterface* pxTask =
+            GetResources() ->
+            GetTaskPointerByNameFromMap(m_sDeviceControlName);
+
+        if (pxTask != 0)
         {
-            CTaskInterface* pxTask =
-                GetResources() ->
-                GetTaskPointerByNameFromMap(m_sDeviceControlName);
-
-            if (pxTask != 0)
-            {
 //                std::cout << "CModbusSmSlave::Fsm INIT 2"  << std::endl;
-                if (pxTask -> GetFsmState() >= READY)
-                {
-//                    std::cout << "CModbusSmSlave::Fsm INIT 3"  << std::endl;
-                    SetDeviceControl((CDeviceControl*)pxTask);
-                    uiReadyTaskCounter += 1;
-//                    SetFsmState(READY);
-                }
-            }
-            else
+            if (pxTask -> GetFsmState() >= READY)
             {
-                //                std::cout << "CModbusSmSlave::Fsm INIT 4"  << std::endl;
-                if (GetTimerPointer() -> IsOverflow())
-                {
-                std::cout << "CModbusSmSlave::Fsm INIT 5"  << std::endl;
-                    SetFsmState(STOP);
-                }
+//                    std::cout << "CModbusSmSlave::Fsm INIT 3"  << std::endl;
+                SetDeviceControl((CDeviceControl*)pxTask);
+                uiReadyTaskCounter += 1;
+//                    SetFsmState(READY);
             }
         }
-
-        if (uiReadyTaskCounter > 1)
+        else
         {
-            std::cout << "CModbusSmSlave::Fsm INIT 9"  << std::endl;
-            SetFsmState(READY);
+            //                std::cout << "CModbusSmSlave::Fsm INIT 4"  << std::endl;
+            if (GetTimerPointer() -> IsOverflow())
+            {
+                std::cout << "CModbusSmSlave::Fsm INIT 5"  << std::endl;
+                SetFsmState(STOP);
+            }
         }
-        break;
+    }
+
+    if (uiReadyTaskCounter > 1)
+    {
+        std::cout << "CModbusSmSlave::Fsm INIT 9"  << std::endl;
+        SetFsmState(READY);
+    }
+    break;
 
 //    case READY_WAITING:
 //        std::cout << "CModbusSmSlave::Fsm READY_WAITING"  << std::endl;
@@ -738,7 +738,9 @@ uint8_t CModbusSmSlave::Fsm(void)
         std::cout << "CModbusSmSlave::Fsm COMMUNICATION_START"  << std::endl;
         m_pxModbusSlaveLinkLayer ->
         CommunicationStart();
-        SetFsmState(MESSAGE_RECEIVE_WAITING);
+//        SetFsmState(MESSAGE_RECEIVE_WAITING);
+        SetFsmState(ANSWER_PROCESSING);
+
         break;
 
     case COMMUNICATION_RECEIVE_START:
@@ -822,14 +824,42 @@ uint8_t CModbusSmSlave::Fsm(void)
 
     case ANSWER_PROCESSING:
         std::cout << "CModbusSmSlave::Fsm ANSWER_PROCESSING"  << std::endl;
-        if (AnswerProcessing())
+//        if (AnswerProcessing())
+//        {
+//            GetTimerPointer() -> Set(m_uiTransmitDelayTimeout);
+//            SetFsmState(BEFORE_ANSWERING_WAITING);
+//        }
+//        else
+//        {
+//            SetFsmState(MESSAGE_RECEIVE_WAITING);
+//        }
+
+
+
         {
-            GetTimerPointer() -> Set(m_uiTransmitDelayTimeout);
+            uint16_t uiPduOffset = m_pxModbusSlaveLinkLayer -> GetPduOffset();
+            uint8_t * puiRequest = m_pxModbusSlaveLinkLayer -> GetRxBuffer();
+            uint8_t * puiResponse = (m_pxModbusSlaveLinkLayer -> GetTxBuffer());
+            uint16_t  uiLength = m_pxModbusSlaveLinkLayer -> GetFrameLength();
+
+            int8_t uiSlave = 1;//puiRequest[uiPduOffset - 1];
+            int8_t uiFunctionCode = 23;//puiRequest[uiPduOffset];
+
+            uint8_t auiTempData[] = {1, 15, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 22, 4, 0,};
+            memcpy(&puiResponse[uiPduOffset + 2], auiTempData, sizeof(auiTempData));
+            uiLength += sizeof(auiTempData);
+
+            // количество байт в прикладном сообщении массиве конфигурации, не включая остальные.
+            puiResponse[uiPduOffset + 1] = uiLength;//sizeof(auiTempData);// + 1;
+            uiLength ++;
+            uiLength += m_pxModbusSlaveLinkLayer ->
+                        ResponseBasis(uiSlave, uiFunctionCode, puiResponse);
+
+            uiLength = m_pxModbusSlaveLinkLayer -> Tail(puiResponse, uiLength);
+            m_pxModbusSlaveLinkLayer -> SetFrameLength(uiLength);
+
+            GetTimerPointer() -> Set(1000);
             SetFsmState(BEFORE_ANSWERING_WAITING);
-        }
-        else
-        {
-            SetFsmState(MESSAGE_RECEIVE_WAITING);
         }
         break;
 
@@ -838,6 +868,7 @@ uint8_t CModbusSmSlave::Fsm(void)
         // Закончилось время паузы между приёмом и передачей(5 милисекунд)?
         if (GetTimerPointer() -> IsOverflow())
         {
+            std::cout << "CModbusSmSlave::Fsm BEFORE_ANSWERING_WAITING 2"  << std::endl;
             GetTimerPointer() -> Set(m_uiConfirmationTimeout);
             m_pxModbusSlaveLinkLayer ->
             TransmitStart();
@@ -851,18 +882,20 @@ uint8_t CModbusSmSlave::Fsm(void)
         break;
 
     case AFTER_ANSWERING_WAITING:
-        std::cout << "CModbusSmSlave::Fsm AFTER_ANSWERING_WAITING"  << std::endl;
+//        std::cout << "CModbusSmSlave::Fsm AFTER_ANSWERING_WAITING"  << std::endl;
         if (m_pxModbusSlaveLinkLayer -> IsDoneOk())
         {
             std::cout << "CModbusSmSlave::Fsm AFTER_ANSWERING_WAITING 2"  << std::endl;
-            m_pxModbusSlaveLinkLayer ->
-            CommunicationReceiveStart();
-            SetFsmState(MESSAGE_RECEIVE_WAITING);
+//            m_pxModbusSlaveLinkLayer ->
+//            CommunicationReceiveStart();
+//            SetFsmState(MESSAGE_RECEIVE_WAITING);
+            SetFsmState(ANSWER_PROCESSING);
         }
         else if (m_pxModbusSlaveLinkLayer -> IsDoneError())
         {
             std::cout << "CModbusSmSlave::Fsm AFTER_ANSWERING_WAITING 3"  << std::endl;
-            SetFsmState(COMMUNICATION_START);
+//            SetFsmState(COMMUNICATION_START);
+            SetFsmState(ANSWER_PROCESSING);
         }
         else
         {
@@ -872,7 +905,8 @@ uint8_t CModbusSmSlave::Fsm(void)
                 std::cout << "CModbusSmSlave::Fsm AFTER_ANSWERING_WAITING 4"  << std::endl;
 //                m_pxDeviceControl ->
 //                SetFsmCommandState(0);
-                SetFsmState(MESSAGE_RECEIVE_WAITING);
+//                SetFsmState(MESSAGE_RECEIVE_WAITING);
+                SetFsmState(ANSWER_PROCESSING);
             }
         }
         break;

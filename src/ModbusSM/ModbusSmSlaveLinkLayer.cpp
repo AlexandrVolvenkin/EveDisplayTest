@@ -161,6 +161,7 @@ void CModbusSmSlaveLinkLayer::ReceiveStart(void)
 //-------------------------------------------------------------------------------
 void CModbusSmSlaveLinkLayer::TransmitStart(void)
 {
+    cout << "CModbusSmSlaveLinkLayer::TransmitStart 1" << endl;
     SetFsmCommandState(COMMUNICATION_TRANSMIT_START);
 }
 
@@ -412,7 +413,8 @@ uint8_t CModbusSmSlaveLinkLayer::Fsm(void)
         std::cout << "CModbusSmSlaveLinkLayer::Fsm COMMUNICATION_START"  << std::endl;
         m_pxCommunicationDevice -> Open();
         m_uiFrameLength = 0;
-        SetFsmState(COMMUNICATION_RECEIVE_START);
+//        SetFsmState(COMMUNICATION_RECEIVE_START);
+        SetFsmState(COMMUNICATION_FRAME_RECEIVED);
         break;
 
     case COMMUNICATION_RECEIVE_START:

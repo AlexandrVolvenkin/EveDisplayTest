@@ -175,6 +175,20 @@ int16_t CSharedMemoryCommunicationDevice::Write(uint8_t *puiSource, uint16_t uiL
 
     m_puiServerToClientBuffer[0]  = uiLength;
 
+        {
+            cout << "CSharedMemoryCommunicationDevice::Write m_puiServerToClientBuffer" << endl;
+            unsigned char *pucSourceTemp;
+            pucSourceTemp = (unsigned char*)m_puiServerToClientBuffer;
+            for(int i=0; i<32; )
+            {
+                for(int j=0; j<8; j++)
+                {
+                    cout << hex << uppercase << setw(2) << setfill('0') << (unsigned int)pucSourceTemp[i + j] << " ";
+                }
+                cout << endl;
+                i += 8;
+            }
+        }
     return uiLength;
 }
 
