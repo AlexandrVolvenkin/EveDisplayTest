@@ -117,8 +117,6 @@ uint8_t CMainProductionCycle::CreateTasks(void)
                                      std::make_shared<CDeviceControl>()));
     pxDeviceControl ->
     SetResources(&m_xResources);
-//    pxDeviceControl ->
-//    SetDataStoreLinkName("DataStoreFileSystem");
     pxDeviceControl ->
     SetDataStoreName("DataStoreFileSystem");
     m_xResources.AddCurrentlyRunningTasksList(pxDeviceControl);
@@ -394,17 +392,6 @@ void CMainProductionCycle::CurrentlyRunningTasksExecution(void)
 {
 //    std::cout << "CMainProductionCycle CurrentlyRunningTasksExecution"  << std::endl;
 
-//        std::list<CTaskInterface*>::iterator xListIterator;
-//
-//        for(xListIterator =
-//                    GetResources() -> m_lpxCurrentlyRunningTasksList.begin();
-//                xListIterator !=
-//                GetResources() -> m_lpxCurrentlyRunningTasksList.end();
-//                xListIterator++)
-//        {
-//            (*xListIterator) -> Fsm();
-//        }
-
     for(GetResources() -> m_xCurrentlyRunningTasksListIterator =
                 GetResources() -> m_lpxCurrentlyRunningTasksList.begin();
             GetResources() -> m_xCurrentlyRunningTasksListIterator !=
@@ -641,7 +628,7 @@ uint8_t CMainProductionCycle::Fsm(void)
         m_pxModbusSmMasterEveDisplay ->
         ReadDiscreteInputsRequest(1,
                                   0,
-                                  2);
+                                  5);
         SetFsmState(MODBUS_MASTER_ANSWER_WAITING);
         break;
 

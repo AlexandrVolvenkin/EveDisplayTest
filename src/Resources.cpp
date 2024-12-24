@@ -46,6 +46,7 @@ CResources::~CResources()
 //    {
 //        delete pair.second; // Удаляем указатели на объекты
 //    }
+    ModbusWorkingArraysDestroy();
 }
 
 //-------------------------------------------------------------------------------

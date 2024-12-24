@@ -71,20 +71,6 @@ public:
     CDeviceControl* GetDeviceContro(void);
 
     void ModbusWorkingArraysInit(void);
-
-    void WorkingArraysInit(uint8_t *puiCoils,
-                           uint8_t *puiDiscreteInputs,
-                           uint16_t *puiHoldingRegisters,
-                           uint16_t *puiInputRegisters,
-                           uint16_t uiCoilsNumber,
-                           uint16_t uiDiscreteInputsNumber,
-                           uint16_t uiHoldingRegistersNumber,
-                           uint16_t uiInputRegistersNumber);
-    void WorkingArraysCreate(uint16_t uiCoilsNumber,
-                             uint16_t uiDiscreteInputsNumber,
-                             uint16_t uiHoldingRegistersNumber,
-                             uint16_t uiInputRegistersNumber);
-    void WorkingArraysDelete(void);
     static const char *ModbusStringError(int errnum);
 //    void SlaveSet(uint8_t );
 
@@ -92,6 +78,14 @@ public:
     int8_t ReadDiscreteInputsRequest(uint8_t uiSlaveAddress,
                                      uint16_t uiAddress,
                                      uint16_t uiNumberB);
+//    int8_t ReadCoilsRequest(uint16_t uiAddress,
+//                            uint16_t uiBitNumber);
+//    uint16_t ReadCoilsReply(uint8_t *puiDestination);
+//    uint8_t CheckConfirmation(uint8_t *puiDestination, uint16_t uiLength);
+//    int8_t ReadDiscreteInputsRequest(uint8_t uiSlaveAddress,
+//                                     uint16_t uiAddress,
+//                                     uint16_t uiBitNumber);
+//    uint16_t ReadDiscreteInputsReceive(uint8_t *puiMessage, uint16_t uiLength);
 
 //-------------------------------------------------------------------------------
     uint16_t ReadDiscreteInputs(void);
@@ -100,6 +94,7 @@ public:
     uint16_t RequestProcessing(void);
 
 //-------------------------------------------------------------------------------
+    uint16_t ReadDiscreteInputsAnswer(void);
     uint16_t ReadExceptionStatusAnswer(void);
     uint16_t ReportSlaveIDAnswer(void);
     uint16_t AnswerProcessing(void);
@@ -110,9 +105,6 @@ public:
 //protected:
 //private:
 
-//    virtual bool IsDataWrited(void) = 0;
-//    bool IsMessengerReady(void);
-//    virtual uint16_t Tail(uint8_t *, uint16_t ) = 0;
     uint16_t RequestBasis(uint8_t uiSlave,
                           uint8_t uiFunctionCode,
                           uint16_t uiAddress,
@@ -120,8 +112,6 @@ public:
                           uint8_t *puiRequest);
     uint16_t ResponseBasis(uint8_t, uint8_t, uint8_t * );
     uint16_t ResponseException(uint8_t, uint8_t, uint8_t, uint8_t * );
-//    uint16_t SendMessage(uint8_t *, uint16_t );
-//    virtual uint16_t Send(uint8_t *, uint16_t ) = 0;
 
     uint16_t ByteToBitPack(uint16_t,
                            uint16_t,
@@ -137,16 +127,6 @@ public:
     void SetFloat(float, uint16_t * );
 
 public:
-//-------------------------------------------------------------------------------
-// ModbusMaster
-//    int8_t ReadCoilsRequest(uint16_t uiAddress,
-//                            uint16_t uiBitNumber);
-//    uint16_t ReadCoilsReply(uint8_t *puiDestination);
-//    uint8_t CheckConfirmation(uint8_t *puiDestination, uint16_t uiLength);
-//    int8_t ReadDiscreteInputsRequest(uint8_t uiSlaveAddress,
-//                                     uint16_t uiAddress,
-//                                     uint16_t uiBitNumber);
-//    uint16_t ReadDiscreteInputsReceive(uint8_t *puiMessage, uint16_t uiLength);
 
 
 //private:
@@ -189,6 +169,7 @@ public:
     uint8_t m_uiSlaveAddress;
     uint8_t m_uiFunctionCode;
     uint16_t  m_uiLength;
+    uint16_t m_uiAddress;
     uint16_t m_uiQuantity;
     uint16_t m_uiMessageLength;
     // таймоут по отсутствию подтверждения.

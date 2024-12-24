@@ -26,7 +26,7 @@ CModbusSmMaster::CModbusSmMaster()
 {
     std::cout << "CModbusSmMaster constructor"  << std::endl;
     m_pxModbusMasterLinkLayer = 0;
-//    m_pxDeviceControlLink = 0;
+    m_pxDeviceControl = 0;
     // получим имя класса.
     sprintf(GetTaskNamePointer(),
             "%s",
@@ -39,7 +39,6 @@ CModbusSmMaster::CModbusSmMaster()
 CModbusSmMaster::~CModbusSmMaster()
 {
     delete[] m_puiIntermediateBuff;
-    WorkingArraysDelete();
 }
 
 //-------------------------------------------------------------------------------
@@ -132,147 +131,10 @@ void CModbusSmMaster::ModbusWorkingArraysInit(void)
     m_uiInputRegistersNumber = m_pxResources -> GetInputRegistersNumber();
 }
 
-//-------------------------------------------------------------------------------
-void CModbusSmMaster::WorkingArraysInit(uint8_t *puiCoils,
-                                        uint8_t *puiDiscreteInputs,
-                                        uint16_t *puiHoldingRegisters,
-                                        uint16_t *puiInputRegisters,
-                                        uint16_t uiCoilsNumber,
-                                        uint16_t uiDiscreteInputsNumber,
-                                        uint16_t uiHoldingRegistersNumber,
-                                        uint16_t uiInputRegistersNumber)
-{
-//    m_puiCoils = puiCoils;
-//    m_puiDiscreteInputs = puiDiscreteInputs;
-//    m_puiHoldingRegisters = puiHoldingRegisters;
-//    m_puiInputRegisters = puiInputRegisters;
-//    m_uiCoilsNumber = uiCoilsNumber;
-//    m_uiDiscreteInputsNumber = uiDiscreteInputsNumber;
-//    m_uiHoldingRegistersNumber = uiHoldingRegistersNumber;
-//    m_uiInputRegistersNumber = uiInputRegistersNumber;
-}
-
-//-------------------------------------------------------------------------------
-void CModbusSmMaster::WorkingArraysCreate(uint16_t uiCoilsNumber,
-        uint16_t uiDiscreteInputsNumber,
-        uint16_t uiHoldingRegistersNumber,
-        uint16_t uiInputRegistersNumber)
-{
-//    m_puiCoils = new uint8_t(uiCoilsNumber);
-//    m_puiDiscreteInputs = new uint8_t(uiDiscreteInputsNumber);
-//    m_puiHoldingRegisters = new uint16_t(uiHoldingRegistersNumber);
-//    m_puiInputRegisters = new uint16_t(uiInputRegistersNumber);
-//
-//    m_uiCoilsNumber = uiCoilsNumber;
-//    m_uiDiscreteInputsNumber = uiDiscreteInputsNumber;
-//    m_uiHoldingRegistersNumber = uiHoldingRegistersNumber;
-//    m_uiInputRegistersNumber = uiInputRegistersNumber;
-}
-
-//-------------------------------------------------------------------------------
-void CModbusSmMaster::WorkingArraysDelete(void)
-{
-//    delete m_puiCoils;
-//    delete m_puiDiscreteInputs;
-//    delete m_puiHoldingRegisters;
-//    delete m_puiInputRegisters;
-}
-
 ////-------------------------------------------------------------------------------
 //void CModbusSmMaster::SlaveSet(uint8_t uiSlave)
 //{
 //    m_uiOwnAddress = uiSlave;
-//}
-
-//-------------------------------------------------------------------------------
-/* Builds a TCP request header */
-uint16_t CModbusSmMaster::RequestBasis(uint8_t uiSlave,
-                                       uint8_t uiFunctionCode,
-                                       uint16_t uiAddress,
-                                       uint16_t uiBitNumber,
-                                       uint8_t *puiRequest)
-{
-//    /* Extract from MODBUS Messaging on TCP/IP Implementation Guide V1.0b
-//       (page 23/46):
-//       The transaction identifier is used to associate the future response
-//       with the request. So, at a time, on a TCP connection, this identifier
-//       must be unique. */
-//
-//    /* Transaction ID */
-//    if (m_uiRequestTransactionId < UINT16_MAX)
-//    {
-//        m_uiRequestTransactionId++;
-//    }
-//    else
-//    {
-//        m_uiRequestTransactionId = 0;
-//    }
-//    puiRequest[0] = (m_uiRequestTransactionId >> 8);
-//    puiRequest[1] = (m_uiRequestTransactionId & 0x00ff);
-//
-//    /* Protocol Modbus */
-//    puiRequest[2] = 0;
-//    puiRequest[3] = 0;
-//
-//    /* Length will be defined later by set_puiRequest_length_tcp at offsets 4
-//       and 5 */
-//
-//    puiRequest[6] = uiSlave;
-//    puiRequest[7] = uiFunctionCode;
-//    puiRequest[8] = (static_cast<uint8_t>(uiAddress >> 8));
-//    puiRequest[9] = (static_cast<uint8_t>(uiAddress & 0x00ff));
-//    puiRequest[10] = (static_cast<uint8_t>(uiBitNumber >> 8));
-//    puiRequest[11] = (static_cast<uint8_t>(uiBitNumber & 0x00ff));
-
-//    return _MODBUS_TCP_PRESET_REQ_LENGTH;
-}
-
-//-------------------------------------------------------------------------------
-/* Builds a TCP response header */
-uint16_t CModbusSmMaster::ResponseBasis(uint8_t uiSlave, uint8_t uiFunctionCode, uint8_t *puiResponse)
-{
-//    /* Extract from MODBUS Messaging on TCP/IP Implementation
-//       Guide V1.0b (page 23/46):
-//       The transaction identifier is used to associate the future
-//       response with the puiRequestuest. */
-//    puiResponse[0] = (m_uiResponseTransactionId >> 8);
-//    puiResponse[1] = (m_uiResponseTransactionId & 0x00ff);
-//
-//    /* Protocol Modbus */
-//    puiResponse[2] = 0;
-//    puiResponse[3] = 0;
-//
-//    /* Length will be set later by send_msg (4 and 5) */
-//
-//    /* The slave ID is copied from the indication */
-//    puiResponse[6] = uiSlave;
-//    puiResponse[7] = uiFunctionCode;
-//
-//    return _MODBUS_TCP_PRESET_RSP_LENGTH;
-}
-
-////-------------------------------------------------------------------------------
-//bool CModbusSmMaster::IsMessengerReady(void)
-//{
-//    uint8_t uiFsmState = GetFsmState();
-//
-//    if ((uiFsmState == READY) ||
-//            (uiFsmState == DONE_OK) ||
-//            (uiFsmState == DONE_ERROR))
-//    {
-//        return true;
-//    }
-//    else
-//    {
-//        return false;
-//    }
-//}
-
-////-------------------------------------------------------------------------------
-//uint16_t CModbusSmMaster::SendMessage(uint8_t *puiMessage, uint16_t uiLength)
-//{
-//    uiLength = Tail(puiMessage, uiLength);
-//    return Send(puiMessage, uiLength);
 //}
 
 //-------------------------------------------------------------------------------
@@ -345,6 +207,7 @@ int8_t CModbusSmMaster::ReadDiscreteInputsRequest(uint8_t uiSlaveAddress,
             uint8_t * puiResponse = m_pxModbusMasterLinkLayer -> GetTxBuffer();
 
             m_uiFunctionCode = _FC_READ_DISCRETE_INPUTS;
+            m_uiAddress = uiAddress;
             m_uiQuantity = uiNumberB;
             uint16_t  uiLength = m_pxModbusMasterLinkLayer ->
                                  RequestBasis(uiSlaveAddress,
@@ -369,60 +232,34 @@ int8_t CModbusSmMaster::ReadDiscreteInputsRequest(uint8_t uiSlaveAddress,
 }
 
 //-------------------------------------------------------------------------------
-uint16_t CModbusSmMaster::ReadDiscreteInputs(void)
+uint16_t CModbusSmMaster::ReadDiscreteInputsAnswer(void)
 {
-    std::cout << "CModbusSmMaster::ReadDiscreteInputs 1" << std::endl;
+    std::cout << "CModbusSmMaster::ReadDiscreteInputsAnswer 1" << std::endl;
 
     uint16_t uiPduOffset = m_pxModbusMasterLinkLayer -> GetPduOffset();
     uint8_t * puiRequest = m_pxModbusMasterLinkLayer -> GetRxBuffer();
-    uint8_t * puiResponse = m_pxModbusMasterLinkLayer -> GetTxBuffer();
-    uint16_t  uiLength = m_pxModbusMasterLinkLayer -> GetFrameLength();
 
-    int8_t uiSlave = puiRequest[uiPduOffset - 1];
-    int8_t uiFunctionCode = puiRequest[uiPduOffset];
-    uint16_t uiAddress = ((static_cast<uint16_t>(puiRequest[uiPduOffset + 1]) << 8) |
-                          (static_cast<uint16_t>(puiRequest[uiPduOffset + 2])));
+    SetBytesFromBits(m_puiDiscreteInputs,
+                     m_uiAddress,
+                     m_uiQuantity,
+                     &puiRequest[uiPduOffset + 1]);
 
-    uint16_t uiNumberB = ((static_cast<uint16_t>(puiRequest[uiPduOffset + 3]) << 8) |
-                          (static_cast<uint16_t>(puiRequest[uiPduOffset + 4])));
+            {
+                cout << "CModbusSmMaster::ReadDiscreteInputsAnswer m_puiDiscreteInputs" << endl;
+                unsigned char *pucSourceTemp;
+                pucSourceTemp = (unsigned char*)m_puiDiscreteInputs;
+                for(int i=0; i<32; )
+                {
+                    for(int j=0; j<8; j++)
+                    {
+                        cout << hex << uppercase << setw(2) << setfill('0') << (unsigned int)pucSourceTemp[i + j] << " ";
+                    }
+                    cout << endl;
+                    i += 8;
+                }
+            }
 
-    if (uiNumberB < 1 || MODBUS_MAX_READ_BITS < uiNumberB)
-    {
-        uiLength = m_pxModbusMasterLinkLayer ->
-                   ResponseException(uiSlave,
-                                     uiFunctionCode,
-                                     MODBUS_EXCEPTION_ILLEGAL_DATA_VALUE,
-                                     puiResponse);
-    }
-    else if ((uiAddress + uiNumberB) > m_uiDiscreteInputsNumber)
-    {
-        uiLength = m_pxModbusMasterLinkLayer ->
-                   ResponseException(uiSlave,
-                                     uiFunctionCode,
-                                     MODBUS_EXCEPTION_ILLEGAL_DATA_ADDRESS,
-                                     puiResponse);
-    }
-    else
-    {
-        std::cout << "CModbusSmMaster::ReadDiscreteInputs 4" << std::endl;
-        uiLength = m_pxModbusMasterLinkLayer ->
-                   ResponseBasis(uiSlave, uiFunctionCode, puiResponse);
-
-        if (uiNumberB % 8)
-        {
-            puiResponse[uiLength++] = ((uiNumberB / 8) + 1);
-        }
-        else
-        {
-            puiResponse[uiLength++] = (uiNumberB / 8);
-        }
-        uiLength = ByteToBitPack(uiAddress,
-                                 uiNumberB,
-                                 m_puiDiscreteInputs,
-                                 puiResponse,
-                                 uiLength);
-    }
-    return uiLength;
+    return m_uiQuantity;
 }
 
 //-------------------------------------------------------------------------------
@@ -472,60 +309,34 @@ uint16_t CModbusSmMaster::ReportSlaveID(void)
 
     std::cout << "CModbusSmMaster::ReportSlaveID 7" << std::endl;
     return uiLength;
-}
 
-//-------------------------------------------------------------------------------
-uint16_t CModbusSmMaster::RequestProcessing(void)
-{
-    std::cout << "CModbusSmMaster::RequestProcessing 1" << std::endl;
 
-    uint16_t uiPduOffset = m_pxModbusMasterLinkLayer -> GetPduOffset();
-    uint8_t * puiRequest = m_pxModbusMasterLinkLayer -> GetRxBuffer();
-    uint8_t * puiResponse = m_pxModbusMasterLinkLayer -> GetTxBuffer();
-    uint16_t  uiLength = m_pxModbusMasterLinkLayer -> GetFrameLength();
 
-    int8_t uiSlave = puiRequest[uiPduOffset - 1];
-    int8_t uiFunctionCode = puiRequest[uiPduOffset];
-
-    std::cout << "CModbusSmMaster::RequestProcessing uiSlave "  << (int)uiSlave << std::endl;
-    std::cout << "CModbusSmMaster::RequestProcessing uiFunctionCode "  << (int)uiFunctionCode << std::endl;
-
-    /* Filter on the Modbus unit identifier (slave) in RTU mode */
-    if (uiSlave != m_uiOwnAddress && uiSlave != MODBUS_BROADCAST_ADDRESS)
-    {
-        std::cout << "CModbusSmMaster::RequestProcessing 2" << std::endl;
-        return 0;
-    }
-
-    // не ожидаем ответа
-    m_uiLength = 0;
-
-    switch (uiFunctionCode)
-    {
-        std::cout << "CModbusSmMaster::RequestProcessing 3" << std::endl;
-
-    case _FC_READ_EXCEPTION_STATUS:
-        uiLength = ReadExceptionStatus();
-        break;
-
-    case _FC_REPORT_SLAVE_ID:
-        uiLength = ReportSlaveID();
-        break;
-
-    default:
-        std::cout << "CModbusSmMaster::RequestProcessing 4" << std::endl;
-        uiLength = m_pxModbusMasterLinkLayer ->
-                   ResponseException(uiSlave,
-                                     uiFunctionCode,
-                                     MODBUS_EXCEPTION_ILLEGAL_FUNCTION,
-                                     puiResponse);
-        break;
-    }
-
-    std::cout << "CModbusSmMaster::RequestProcessing 5" << std::endl;
-    uiLength = m_pxModbusMasterLinkLayer -> Tail(puiResponse, uiLength);
-    m_pxModbusMasterLinkLayer -> SetFrameLength(uiLength);
-    return uiLength;
+//        {
+//            uint16_t uiPduOffset = m_pxModbusMasterLinkLayer -> GetPduOffset();
+//            uint8_t * puiRequest = m_pxModbusMasterLinkLayer -> GetRxBuffer();
+//            uint8_t * puiResponse = (m_pxModbusMasterLinkLayer -> GetTxBuffer());
+//            uint16_t  uiLength = m_pxModbusMasterLinkLayer -> GetFrameLength();
+//
+//            int8_t uiSlave = 1;//puiRequest[uiPduOffset - 1];
+//            int8_t uiFunctionCode = 23;//puiRequest[uiPduOffset];
+//
+//            uint8_t auiTempData[] = {1, 15, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 22, 4, 0,};
+//            memcpy(&puiResponse[uiPduOffset + 2], auiTempData, sizeof(auiTempData));
+//            uiLength += sizeof(auiTempData);
+//
+//            // количество байт в прикладном сообщении массиве конфигурации, не включая остальные.
+//            puiResponse[uiPduOffset + 1] = uiLength;//sizeof(auiTempData);// + 1;
+//            uiLength ++;
+//            uiLength += m_pxModbusMasterLinkLayer ->
+//                        ResponseBasis(uiSlave, uiFunctionCode, puiResponse);
+//
+//            uiLength = m_pxModbusMasterLinkLayer -> Tail(puiResponse, uiLength);
+//            m_pxModbusMasterLinkLayer -> SetFrameLength(uiLength);
+//
+//            GetTimerPointer() -> Set(1000);
+//            SetFsmState(BEFORE_REQUEST_WAITING);
+//        }
 }
 
 
@@ -616,6 +427,10 @@ uint16_t CModbusSmMaster::AnswerProcessing(void)
     {
         std::cout << "CModbusSmMaster::AnswerProcessing 3" << std::endl;
 
+    case _FC_READ_DISCRETE_INPUTS:
+        uiLength = ReadDiscreteInputsAnswer();
+        break;
+
     case _FC_READ_EXCEPTION_STATUS:
         uiLength = ReadExceptionStatusAnswer();
         break;
@@ -635,8 +450,6 @@ uint16_t CModbusSmMaster::AnswerProcessing(void)
     }
 
     std::cout << "CModbusSmMaster::AnswerProcessing 5" << std::endl;
-    uiLength = m_pxModbusMasterLinkLayer -> Tail(puiResponse, uiLength);
-    m_pxModbusMasterLinkLayer -> SetFrameLength(uiLength);
     return uiLength;
 }
 
@@ -749,7 +562,6 @@ uint8_t CModbusSmMaster::Fsm(void)
 //                    std::cout << "CModbusSmMaster::Fsm INIT 3"  << std::endl;
                 SetModbusMasterLinkLayer((CModbusSmMasterLinkLayer*)pxTask);
                 uiReadyTaskCounter += 1;
-//                    SetFsmState(READY);
             }
         }
         else
@@ -777,7 +589,6 @@ uint8_t CModbusSmMaster::Fsm(void)
 //                    std::cout << "CModbusSmMaster::Fsm INIT 3"  << std::endl;
                 SetDeviceControl((CDeviceControl*)pxTask);
                 uiReadyTaskCounter += 1;
-//                    SetFsmState(READY);
             }
         }
         else
@@ -798,45 +609,18 @@ uint8_t CModbusSmMaster::Fsm(void)
     }
     break;
 
-//    case READY_WAITING:
-//        std::cout << "CModbusSmMaster::Fsm READY_WAITING"  << std::endl;
-//        SetFsmState(READY);
-//        break;
-
     case READY:
 //        std::cout << "CModbusSmMaster::Fsm READY"  << std::endl;
-//        {
-//            if (m_pxCommandDataContainer != 0)
-//            {
-//                std::cout << "CModbusSmMaster::Fsm READY 2"  << std::endl;
-//                m_pxOperatingDataContainer = m_pxCommandDataContainer;
-//                SetFsmState(GetFsmCommandState());
-//                SetFsmCommandState(0);
-//                m_pxCommandDataContainer = 0;
-//            }
-//        }
-
-
-//        {
-//            if (GetFsmCommandState() != 0)
-//            {
-//                SetFsmState(GetFsmCommandState());
-//                SetFsmCommandState(0);
-//            }
-//        }
-//        SetFsmState(COMMUNICATION_START);
         break;
 
     case DONE_OK:
 //        std::cout << "CModbusSmMaster::Fsm DONE_OK"  << std::endl;
         SetFsmOperationStatus(DONE_OK);
-//        SetFsmState(READY);
         break;
 
     case DONE_ERROR:
 //        std::cout << "CModbusSmMaster::Fsm DONE_ERROR"  << std::endl;
         SetFsmOperationStatus(DONE_ERROR);
-//        SetFsmState(READY);
         break;
 
     case COMMUNICATION_START:
@@ -850,8 +634,6 @@ uint8_t CModbusSmMaster::Fsm(void)
 
     case COMMUNICATION_RECEIVE_START:
         std::cout << "CModbusSmMaster::Fsm COMMUNICATION_RECEIVE_START"  << std::endl;
-//        m_pxModbusMasterLinkLayer ->
-//        CommunicationReceiveStart();
         m_pxOperatingDataContainer -> m_uiFsmCommandState =
             CModbusSmMasterLinkLayer::COMMUNICATION_RECEIVE_START;
         m_pxModbusMasterLinkLayer ->
@@ -891,33 +673,6 @@ uint8_t CModbusSmMaster::Fsm(void)
             SetFsmState(DONE_ERROR);
         }
 
-
-
-//        {
-//            uint16_t uiPduOffset = m_pxModbusMasterLinkLayer -> GetPduOffset();
-//            uint8_t * puiRequest = m_pxModbusMasterLinkLayer -> GetRxBuffer();
-//            uint8_t * puiResponse = (m_pxModbusMasterLinkLayer -> GetTxBuffer());
-//            uint16_t  uiLength = m_pxModbusMasterLinkLayer -> GetFrameLength();
-//
-//            int8_t uiSlave = 1;//puiRequest[uiPduOffset - 1];
-//            int8_t uiFunctionCode = 23;//puiRequest[uiPduOffset];
-//
-//            uint8_t auiTempData[] = {1, 15, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 22, 4, 0,};
-//            memcpy(&puiResponse[uiPduOffset + 2], auiTempData, sizeof(auiTempData));
-//            uiLength += sizeof(auiTempData);
-//
-//            // количество байт в прикладном сообщении массиве конфигурации, не включая остальные.
-//            puiResponse[uiPduOffset + 1] = uiLength;//sizeof(auiTempData);// + 1;
-//            uiLength ++;
-//            uiLength += m_pxModbusMasterLinkLayer ->
-//                        ResponseBasis(uiSlave, uiFunctionCode, puiResponse);
-//
-//            uiLength = m_pxModbusMasterLinkLayer -> Tail(puiResponse, uiLength);
-//            m_pxModbusMasterLinkLayer -> SetFrameLength(uiLength);
-//
-//            GetTimerPointer() -> Set(1000);
-//            SetFsmState(BEFORE_REQUEST_WAITING);
-//        }
         break;
 
     case REQUEST_START:
@@ -933,8 +688,6 @@ uint8_t CModbusSmMaster::Fsm(void)
         {
             std::cout << "CModbusSmMaster::Fsm BEFORE_REQUEST_WAITING 2"  << std::endl;
             GetTimerPointer() -> Set(m_uiConfirmationTimeout);
-            //            m_pxModbusMasterLinkLayer ->
-//            TransmitStart();
             m_pxOperatingDataContainer -> m_uiFsmCommandState =
                 CModbusSmMasterLinkLayer::COMMUNICATION_TRANSMIT_START;
             m_pxModbusMasterLinkLayer ->
@@ -954,12 +707,6 @@ uint8_t CModbusSmMaster::Fsm(void)
         if (uiFsmState == DONE_OK)
         {
             std::cout << "CModbusSmMaster::Fsm AFTER_REQUEST_WAITING 2"  << std::endl;
-            //            m_pxModbusMasterLinkLayer ->
-            //            CommunicationReceiveStart();
-//            m_pxOperatingDataContainer -> m_uiFsmCommandState =
-//                CModbusSmMasterLinkLayer::COMMUNICATION_RECEIVE_START;
-//            m_pxModbusMasterLinkLayer ->
-//            SetTaskData(m_pxOperatingDataContainer);
             SetFsmState(COMMUNICATION_RECEIVE_START);
         }
         else if (uiFsmState == DONE_ERROR)

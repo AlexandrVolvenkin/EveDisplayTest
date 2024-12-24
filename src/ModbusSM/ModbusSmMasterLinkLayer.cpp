@@ -28,53 +28,6 @@ CModbusSmMasterLinkLayer::CModbusSmMasterLinkLayer()
     std::cout << "CModbusSmMasterLinkLayer constructor"  << std::endl;
     m_pxCommunicationDevice = 0;
     SetFsmState(START);
-
-////    // Создание или открытие разделяемой памяти
-////    addr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-////
-////    if (addr == MAP_FAILED)
-////    {
-////        perror("mmap");
-////        exit(EXIT_FAILURE);
-////    }
-////
-////    cout << "Shared memory created successfully at address: " << addr << endl;
-//
-////-------------------------------------------------------------------------------
-//    int fd;
-//
-//    fd = shm_open("SharedMemoryTxBuffer",
-//                  O_CREAT | O_RDWR,
-//                  S_IRWXU | S_IRWXG);
-//    if(fd < 0)
-//    {
-//        printf("%s\n", strerror(errno));
-//    }
-//    printf("Shared Memory Open: %s %d\n","SharedMemoryTxBuffer", fd);
-//    ftruncate(fd, MODBUS_SM_MAX_ADU_LENGTH);
-//    m_puiTxBuffer = (uint8_t*)mmap(0,
-//                                   MODBUS_SM_MAX_ADU_LENGTH,
-//                                   PROT_READ | PROT_WRITE, MAP_SHARED,
-//                                   fd,
-//                                   0);
-//    close(fd);
-//
-////-------------------------------------------------------------------------------
-//    fd = shm_open("SharedMemoryRxBuffer",
-//                  O_CREAT | O_RDWR,
-//                  S_IRWXU | S_IRWXG);
-//    if(fd < 0)
-//    {
-//        printf("%s\n", strerror(errno));
-//    }
-//    printf("Shared Memory Open: %s %d\n","SharedMemoryRxBuffer", fd);
-//    ftruncate(fd, MODBUS_SM_MAX_ADU_LENGTH);
-//    m_puiRxBuffer = (uint8_t*)mmap(0,
-//                                   MODBUS_SM_MAX_ADU_LENGTH,
-//                                   PROT_READ | PROT_WRITE, MAP_SHARED,
-//                                   fd,
-//                                   0);
-//    close(fd);
 }
 
 //-------------------------------------------------------------------------------
@@ -82,11 +35,6 @@ CModbusSmMasterLinkLayer::~CModbusSmMasterLinkLayer()
 {
     m_pxCommunicationDevice -> Close();
     delete m_pxCommunicationDevice;
-
-//    munmap(m_puiTxBuffer,
-//           MODBUS_SM_MAX_ADU_LENGTH);
-//    munmap(m_puiRxBuffer,
-//           MODBUS_SM_MAX_ADU_LENGTH);
 }
 
 //-------------------------------------------------------------------------------
@@ -412,7 +360,6 @@ uint8_t CModbusSmMasterLinkLayer::Fsm(void)
             {
 //                    std::cout << "CModbusSmMasterLinkLayer::Fsm INIT 3"  << std::endl;
                 SetCommunicationDevice((CCommunicationDeviceInterfaceNew*)pxTask);
-                SetFsmCommandState(0);
                 SetFsmState(READY);
             }
         }
@@ -430,25 +377,16 @@ uint8_t CModbusSmMasterLinkLayer::Fsm(void)
 
     case READY:
 //        std::cout << "CModbusSmMasterLinkLayer::Fsm READY"  << std::endl;
-
-//        if (GetFsmCommandState() != 0)
-//        {
-//            std::cout << "CModbusSmMasterLinkLayer::Fsm READY 2"  << std::endl;
-//            SetFsmState(GetFsmCommandState());
-//            SetFsmCommandState(0);
-//        }
         break;
 
     case DONE_OK:
 //        std::cout << "CModbusSmMasterLinkLayer::Fsm DONE_OK"  << std::endl;
         SetFsmOperationStatus(DONE_OK);
-//        SetFsmState(READY);
         break;
 
     case DONE_ERROR:
 //        std::cout << "CModbusSmMasterLinkLayer::Fsm DONE_ERROR"  << std::endl;
         SetFsmOperationStatus(DONE_ERROR);
-//        SetFsmState(READY);
         break;
 
     case COMMUNICATION_START:
@@ -467,7 +405,6 @@ uint8_t CModbusSmMasterLinkLayer::Fsm(void)
 
     case COMMUNICATION_RECEIVE:
 //        std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE"  << std::endl;
-        m_uiFrameLength = 0;
         iBytesNumber =
             m_pxCommunicationDevice ->
             ReceiveStart((m_auiRxBuffer + m_uiFrameLength),
@@ -510,48 +447,6 @@ uint8_t CModbusSmMasterLinkLayer::Fsm(void)
                 SetFsmState(DONE_ERROR);
             }
         }
-        break;
-
-    case COMMUNICATION_RECEIVE_END:
-        std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_END"  << std::endl;
-//        iBytesNumber =
-//            m_pxCommunicationDevice ->
-//            ReceiveContinue((m_auiRxBuffer + m_uiFrameLength),
-//                            (MODBUS_SM_MAX_ADU_LENGTH - m_uiFrameLength),
-//                            m_uiGuardTimeout);
-//        if (iBytesNumber > 0)
-//        {
-//            std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_END 2"  << std::endl;
-//            cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_END errno " << errno << endl;
-//            m_uiFrameLength = m_uiFrameLength + iBytesNumber;
-//        }
-//        else if (iBytesNumber < 0)
-//        {
-//            std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_END 3"  << std::endl;
-//            cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_END errno " << errno << endl;
-//            SetFsmState(COMMUNICATION_RECEIVE_ERROR);
-//        }
-//        else
-//        {
-//            std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_END 4"  << std::endl;
-//            cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_END errno " << errno << endl;
-//            SetFsmState(COMMUNICATION_FRAME_CHECK);
-//
-//            {
-//                cout << "CModbusSmMasterLinkLayer::Fsm m_auiRxBuffer" << endl;
-//                unsigned char *pucSourceTemp;
-//                pucSourceTemp = (unsigned char*)m_auiRxBuffer;
-//                for(int i=0; i<32; )
-//                {
-//                    for(int j=0; j<8; j++)
-//                    {
-//                        cout << hex << uppercase << setw(2) << setfill('0') << (unsigned int)pucSourceTemp[i + j] << " ";
-//                    }
-//                    cout << endl;
-//                    i += 8;
-//                }
-//            }
-//        }
         break;
 
     case COMMUNICATION_FRAME_CHECK:
