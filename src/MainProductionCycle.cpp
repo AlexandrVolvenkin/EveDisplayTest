@@ -297,6 +297,7 @@ uint8_t CMainProductionCycle::CreateTasks(void)
     pxModbusSmMasterEveDisplay ->
     ModbusWorkingArraysInit();
     m_xResources.AddCurrentlyRunningTasksList(pxModbusSmMasterEveDisplay);
+    m_pxModbusSmMasterEveDisplay = pxModbusSmMasterEveDisplay;
 }
 
 //-------------------------------------------------------------------------------
@@ -616,7 +617,7 @@ uint8_t CMainProductionCycle::Fsm(void)
     case DATABASE_CHECK_END_OK:
 //        std::cout << "CMainProductionCycle::Fsm DATABASE_CHECK_END_OK"  << std::endl;
         CurrentlyRunningTasksExecution();
-        SetFsmState(MAIN_CYCLE_MODBUS_SLAVE);
+        SetFsmState(MODBUS_MASTER_SEND_MESSAGE);
         break;
 
     case DATABASE_CHECK_END_ERROR:
@@ -631,6 +632,26 @@ uint8_t CMainProductionCycle::Fsm(void)
         CurrentlyRunningTasksExecution();
 
         usleep(1000);
+        break;
+
+    case MODBUS_MASTER_SEND_MESSAGE:
+        std::cout << "CMainProductionCycle::Fsm MODBUS_MASTER_SEND_MESSAGE"  << std::endl;
+        CurrentlyRunningTasksExecution();
+        GetTimerPointer() -> Set(2000);
+        m_pxModbusSmMasterEveDisplay ->
+        ReadDiscreteInputsRequest(1,
+                                  0,
+                                  2);
+        SetFsmState(MODBUS_MASTER_ANSWER_WAITING);
+        break;
+
+    case MODBUS_MASTER_ANSWER_WAITING:
+//        std::cout << "CMainProductionCycle::Fsm MODBUS_MASTER_ANSWER_WAITING"  << std::endl;
+        CurrentlyRunningTasksExecution();
+        if (GetTimerPointer() -> IsOverflow())
+        {
+            SetFsmState(MODBUS_MASTER_SEND_MESSAGE);
+        }
         break;
 
     case LED_BLINK_ON:

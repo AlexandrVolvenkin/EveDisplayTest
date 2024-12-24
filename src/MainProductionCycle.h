@@ -35,6 +35,7 @@ class CConfigurationCreate;
 class CDataStoreCheck;
 //class CDataStore;
 //class CDeviceControl;
+class CModbusSmMaster;
 
 //-------------------------------------------------------------------------------
 class CMainProductionCycle : public CTask//, public CDfa
@@ -57,6 +58,8 @@ public:
         DATABASE_CHECK_END_ERROR,
 
         MAIN_CYCLE_MODBUS_SLAVE,
+        MODBUS_MASTER_SEND_MESSAGE,
+        MODBUS_MASTER_ANSWER_WAITING,
         LED_BLINK_ON,
         LED_BLINK_OFF,
     };
@@ -109,6 +112,8 @@ private:
 //    CModbusRtuSlaveTopLevelProduction* m_pxModusRtuSlaveTopLevelProduction;
     CModbusRtuSlaveLinkLayer* m_pxModbusRtuSlaveLinkLayerUpperLevel;
     CModbusSlave* m_pxModbusRtuSlaveUpperLevel;
+
+    CModbusSmMaster* m_pxModbusSmMasterEveDisplay;
 
     uint8_t *m_puiCoils;
     uint8_t *m_puiDiscreteInputs;

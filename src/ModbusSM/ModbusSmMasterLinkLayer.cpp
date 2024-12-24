@@ -129,7 +129,7 @@ void CModbusSmMasterLinkLayer::Process(CModbusSmMasterLinkLayer* pxModbusSlaveLi
 //-------------------------------------------------------------------------------
 bool CModbusSmMasterLinkLayer::SetTaskData(CDataContainerDataBase* pxDataContainer)
 {
-    std::cout << "CModbusSmMasterLinkLayer::SetTaskData 1" << std::endl;
+//    std::cout << "CModbusSmMasterLinkLayer::SetTaskData 1" << std::endl;
     uint8_t uiFsmState = GetFsmState();
 
     if (IsTaskReady())
@@ -149,7 +149,7 @@ bool CModbusSmMasterLinkLayer::SetTaskData(CDataContainerDataBase* pxDataContain
 //-------------------------------------------------------------------------------
 bool CModbusSmMasterLinkLayer::GetTaskData(CDataContainerDataBase* pxDataContainer)
 {
-    std::cout << "CModbusSmMasterLinkLayer::SetTaskData 1" << std::endl;
+//    std::cout << "CModbusSmMasterLinkLayer::GetTaskData 1" << std::endl;
 
     m_pxOperatingDataContainer -> m_uiFsmCommandState = GetFsmState();
     *pxDataContainer = *m_pxOperatingDataContainer;
@@ -393,6 +393,7 @@ uint8_t CModbusSmMasterLinkLayer::Fsm(void)
     case START:
         std::cout << "CModbusSmMasterLinkLayer::Fsm START"  << std::endl;
         std::cout << "CModbusSmMasterLinkLayer::Fsm m_sCommunicationDeviceName" << " " << (m_sCommunicationDeviceName) << std::endl;
+        Init();
         GetTimerPointer() -> Set(TASK_READY_WAITING_TIME);
         SetFsmState(INIT);
         break;
@@ -439,27 +440,33 @@ uint8_t CModbusSmMasterLinkLayer::Fsm(void)
         break;
 
     case DONE_OK:
-        std::cout << "CModbusSmMasterLinkLayer::Fsm DONE_OK"  << std::endl;
+//        std::cout << "CModbusSmMasterLinkLayer::Fsm DONE_OK"  << std::endl;
         SetFsmOperationStatus(DONE_OK);
-        SetFsmState(READY);
+//        SetFsmState(READY);
         break;
 
     case DONE_ERROR:
-        std::cout << "CModbusSmMasterLinkLayer::Fsm DONE_ERROR"  << std::endl;
+//        std::cout << "CModbusSmMasterLinkLayer::Fsm DONE_ERROR"  << std::endl;
         SetFsmOperationStatus(DONE_ERROR);
-        SetFsmState(READY);
+//        SetFsmState(READY);
         break;
 
     case COMMUNICATION_START:
         std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_START"  << std::endl;
         m_pxCommunicationDevice -> Open();
         m_uiFrameLength = 0;
-//        SetFsmState(COMMUNICATION_RECEIVE_START);
-        SetFsmState(COMMUNICATION_FRAME_RECEIVED);
+        SetFsmState(READY);
         break;
 
     case COMMUNICATION_RECEIVE_START:
-//        std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_START"  << std::endl;
+        std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_START"  << std::endl;
+        m_uiFrameLength = 0;
+        GetTimerPointer() -> Set(m_uiConfirmationTimeout);
+        SetFsmState(COMMUNICATION_RECEIVE);
+        break;
+
+    case COMMUNICATION_RECEIVE:
+//        std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE"  << std::endl;
         m_uiFrameLength = 0;
         iBytesNumber =
             m_pxCommunicationDevice ->
@@ -468,7 +475,7 @@ uint8_t CModbusSmMasterLinkLayer::Fsm(void)
                          m_uiReceiveTimeout);
         if (iBytesNumber > 0)
         {
-            std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_START 2"  << std::endl;
+            std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE 2"  << std::endl;
             m_uiFrameLength = m_uiFrameLength + iBytesNumber;
 //            {
 //                cout << "CModbusSmMasterLinkLayer::Fsm m_auiRxBuffer" << endl;
@@ -488,14 +495,20 @@ uint8_t CModbusSmMasterLinkLayer::Fsm(void)
         }
         else if (iBytesNumber < 0)
         {
-            std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_START 3"  << std::endl;
-            cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_START errno " << errno << endl;
+            std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE 3"  << std::endl;
+            cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE errno " << errno << endl;
             SetFsmState(COMMUNICATION_RECEIVE_ERROR);
         }
         else
         {
-//            std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_START 4"  << std::endl;
-//            cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE_START errno " << errno << endl;
+//            std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE 4"  << std::endl;
+//            cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE errno " << errno << endl;
+            if (GetTimerPointer() -> IsOverflow())
+            {
+                std::cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE 5"  << std::endl;
+                cout << "CModbusSmMasterLinkLayer::Fsm COMMUNICATION_RECEIVE errno " << errno << endl;
+                SetFsmState(DONE_ERROR);
+            }
         }
         break;
 
