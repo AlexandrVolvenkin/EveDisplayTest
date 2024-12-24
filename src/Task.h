@@ -84,6 +84,7 @@ public:
 //    virtual uint8_t GetFsmState(void) {};
 //    virtual void SetFsmState(uint8_t uiData) {};
 //    virtual CTimer* GetTimerPointer(void) {};
+    virtual bool IsTaskReady(void) {};
 
 //   virtual uint8_t GetFsmState(void)
 //    {
@@ -155,6 +156,7 @@ public:
 //    uint8_t GetFsmState(void);
 //    void SetFsmState(uint8_t uiData);
 //    CTimer* GetTimerPointer(void);
+    bool IsTaskReady(void);
 
     char* GetTaskNamePointer(void);
     std::shared_ptr<TArgumentData> GetArgumentDataPointer(void);

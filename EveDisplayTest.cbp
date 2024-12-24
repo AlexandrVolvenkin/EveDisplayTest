@@ -13,6 +13,8 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="src/ModbusSM" />
+					<Add directory="src/Modbus" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -22,6 +24,8 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="src/ModbusSM" />
+					<Add directory="src/Modbus" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -77,6 +81,10 @@
 		<Unit filename="src/MainProductionCycle.h" />
 		<Unit filename="src/MessageBox.cpp" />
 		<Unit filename="src/MessageBox.h" />
+		<Unit filename="src/ModbusSM/ModbusSmMaster.cpp" />
+		<Unit filename="src/ModbusSM/ModbusSmMaster.h" />
+		<Unit filename="src/ModbusSM/ModbusSmMasterLinkLayer.cpp" />
+		<Unit filename="src/ModbusSM/ModbusSmMasterLinkLayer.h" />
 		<Unit filename="src/ModbusSM/ModbusSmSlave.cpp" />
 		<Unit filename="src/ModbusSM/ModbusSmSlave.h" />
 		<Unit filename="src/ModbusSM/ModbusSmSlaveLinkLayer.cpp" />
