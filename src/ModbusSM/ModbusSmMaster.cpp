@@ -239,10 +239,25 @@ uint16_t CModbusSmMaster::ReadDiscreteInputsAnswer(void)
     uint16_t uiPduOffset = m_pxModbusMasterLinkLayer -> GetPduOffset();
     uint8_t * puiRequest = m_pxModbusMasterLinkLayer -> GetRxBuffer();
 
+
+            {
+                cout << "CModbusSmMaster::ReadDiscreteInputsAnswer puiRequest" << endl;
+                unsigned char *pucSourceTemp;
+                pucSourceTemp = (unsigned char*)puiRequest;
+                for(int i=0; i<32; )
+                {
+                    for(int j=0; j<8; j++)
+                    {
+                        cout << hex << uppercase << setw(2) << setfill('0') << (unsigned int)pucSourceTemp[i + j] << " ";
+                    }
+                    cout << endl;
+                    i += 8;
+                }
+            }
     SetBytesFromBits(m_puiDiscreteInputs,
                      m_uiAddress,
                      m_uiQuantity,
-                     &puiRequest[uiPduOffset + 1]);
+                     &puiRequest[uiPduOffset + 2]);
 
             {
                 cout << "CModbusSmMaster::ReadDiscreteInputsAnswer m_puiDiscreteInputs" << endl;

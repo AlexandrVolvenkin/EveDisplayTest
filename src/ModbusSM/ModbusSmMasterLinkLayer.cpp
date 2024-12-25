@@ -40,7 +40,7 @@ CModbusSmMasterLinkLayer::~CModbusSmMasterLinkLayer()
 //-------------------------------------------------------------------------------
 uint8_t CModbusSmMasterLinkLayer::Init(void)
 {
-    std::cout << "CModbusSlave Init"  << std::endl;
+    std::cout << "CModbusSmMasterLinkLayer Init"  << std::endl;
     m_pxOperatingDataContainer = static_cast<CDataContainerDataBase*>(GetResources() ->
                                  AddDataContainer(std::make_shared<CDataContainerDataBase>()));
 }
