@@ -627,8 +627,6 @@ uint8_t CMainProductionCycle::Fsm(void)
         std::cout << "CMainProductionCycle::Fsm MODBUS_MASTER_SEND_MESSAGE"  << std::endl;
         CurrentlyRunningTasksExecution();
 
-        xSpi0Semaphore.Acquire();
-
         GetTimerPointer() -> Set(500);
         m_pxModbusSmMasterEveDisplay ->
         ReadDiscreteInputsRequest(1,
@@ -642,9 +640,10 @@ uint8_t CMainProductionCycle::Fsm(void)
         CurrentlyRunningTasksExecution();
         if (GetTimerPointer() -> IsOverflow())
         {
-            xSpi0Semaphore.Release();
 
-            GetTimerPointer() -> Set(500);
+            xSpi0Semaphore.Acquire();
+
+            GetTimerPointer() -> Set(2000);
             SetFsmState(MODBUS_MASTER_ANSWER_WAITING_RELEASE);
         }
         break;
@@ -654,6 +653,8 @@ uint8_t CMainProductionCycle::Fsm(void)
         CurrentlyRunningTasksExecution();
         if (GetTimerPointer() -> IsOverflow())
         {
+            xSpi0Semaphore.Release();
+
             SetFsmState(MODBUS_MASTER_SEND_MESSAGE);
         }
         break;
