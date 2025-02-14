@@ -18,7 +18,7 @@ src/MainProductionCycle.o: ../src/MainProductionCycle.cpp ../src/Task.h \
  D:\Projects\CurrentProjects\CautoProjects\EclipceProjects\EveDisplayTest\EveDisplayTest\src\ModbusSM/ModbusSmMasterLinkLayer.h \
  D:\Projects\CurrentProjects\CautoProjects\EclipceProjects\EveDisplayTest\EveDisplayTest\src\Modbus/ModbusMasterLinkLayer.h \
  D:\Projects\CurrentProjects\CautoProjects\EclipceProjects\EveDisplayTest\EveDisplayTest\src\ModbusSM/ModbusSmMasterLinkLayer.h \
- ../src/Link.h ../src/DataContainer.h \
+ ../src/Link.h ../src/DataContainer.h ../src/Semaphore.h \
  D:\Projects\CurrentProjects\CautoProjects\EclipceProjects\EveDisplayTest\EveDisplayTest\src\EveDisplay/EVE_HAL.h \
  D:\Projects\CurrentProjects\CautoProjects\EclipceProjects\EveDisplayTest\EveDisplayTest\src\EveDisplay/Hardware.h \
  D:\Projects\CurrentProjects\CautoProjects\EclipceProjects\EveDisplayTest\EveDisplayTest\src/Platform.h \
@@ -88,6 +88,8 @@ D:\Projects\CurrentProjects\CautoProjects\EclipceProjects\EveDisplayTest\EveDisp
 ../src/Link.h:
 
 ../src/DataContainer.h:
+
+../src/Semaphore.h:
 
 D:\Projects\CurrentProjects\CautoProjects\EclipceProjects\EveDisplayTest\EveDisplayTest\src\EveDisplay/EVE_HAL.h:
 

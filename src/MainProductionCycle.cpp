@@ -31,6 +31,7 @@
 #include "ModbusSmMasterLinkLayer.h"
 #include "Link.h"
 #include "DataContainer.h"
+#include "Semaphore.h"
 
 #include "EVE_HAL.h"
 #include "MainProductionCycle.h"
@@ -60,6 +61,8 @@ uint8_t auiTempBlock[]
 };
 
 CSpi xSpiCommunicationDevice;
+
+CSemaphore xSpi0Semaphore(12345, 1);
 
 
 //-------------------------------------------------------------------------------
@@ -384,7 +387,6 @@ uint8_t CMainProductionCycle::InitTasks(void)
     SetOwnAddress(1);
 
 
-
 }
 
 //-------------------------------------------------------------------------------
@@ -602,7 +604,7 @@ uint8_t CMainProductionCycle::Fsm(void)
         break;
 
     case DATABASE_CHECK_END_OK:
-//        std::cout << "CMainProductionCycle::Fsm DATABASE_CHECK_END_OK"  << std::endl;
+        std::cout << "CMainProductionCycle::Fsm DATABASE_CHECK_END_OK"  << std::endl;
         CurrentlyRunningTasksExecution();
         SetFsmState(MODBUS_MASTER_SEND_MESSAGE);
         break;
@@ -624,7 +626,10 @@ uint8_t CMainProductionCycle::Fsm(void)
     case MODBUS_MASTER_SEND_MESSAGE:
         std::cout << "CMainProductionCycle::Fsm MODBUS_MASTER_SEND_MESSAGE"  << std::endl;
         CurrentlyRunningTasksExecution();
-        GetTimerPointer() -> Set(2000);
+
+        xSpi0Semaphore.Acquire();
+
+        GetTimerPointer() -> Set(500);
         m_pxModbusSmMasterEveDisplay ->
         ReadDiscreteInputsRequest(1,
                                   0,
@@ -634,6 +639,18 @@ uint8_t CMainProductionCycle::Fsm(void)
 
     case MODBUS_MASTER_ANSWER_WAITING:
 //        std::cout << "CMainProductionCycle::Fsm MODBUS_MASTER_ANSWER_WAITING"  << std::endl;
+        CurrentlyRunningTasksExecution();
+        if (GetTimerPointer() -> IsOverflow())
+        {
+            xSpi0Semaphore.Release();
+
+            GetTimerPointer() -> Set(500);
+            SetFsmState(MODBUS_MASTER_ANSWER_WAITING_RELEASE);
+        }
+        break;
+
+    case MODBUS_MASTER_ANSWER_WAITING_RELEASE:
+//        std::cout << "CMainProductionCycle::Fsm MODBUS_MASTER_SEND_MESSAGE"  << std::endl;
         CurrentlyRunningTasksExecution();
         if (GetTimerPointer() -> IsOverflow())
         {

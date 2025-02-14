@@ -111,6 +111,8 @@
 		<Unit filename="src/Platform.h" />
 		<Unit filename="src/Resources.cpp" />
 		<Unit filename="src/Resources.h" />
+		<Unit filename="src/Semaphore.cpp" />
+		<Unit filename="src/Semaphore.h" />
 		<Unit filename="src/ServiceMarket.cpp" />
 		<Unit filename="src/ServiceMarket.h" />
 		<Unit filename="src/StorageDevice.cpp" />
