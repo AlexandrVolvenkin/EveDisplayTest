@@ -117,15 +117,15 @@ int16_t CSharedMemoryCommunicationDevice::ReceiveStart(uint8_t *puiDestination,
 {
 //    std::cout << "CSharedMemoryCommunicationDevice::ReceiveStart 1"  << std::endl;
 
-    uint16_t uiLengthLocal = m_puiClientToServerBuffer[0];
+    uint16_t uiLengthLocal = m_puiServerToClientBuffer[0];
 
     if (uiLengthLocal)
     {
         cout << "CSharedMemoryCommunicationDevice::ReceiveStart 2" << endl;
         {
-            cout << "CSharedMemoryCommunicationDevice::ReceiveStart m_puiClientToServerBuffer" << endl;
+            cout << "CSharedMemoryCommunicationDevice::ReceiveStart m_puiServerToClientBuffer" << endl;
             unsigned char *pucSourceTemp;
-            pucSourceTemp = (unsigned char*)m_puiClientToServerBuffer;
+            pucSourceTemp = (unsigned char*)m_puiServerToClientBuffer;
             for(int i=0; i<32; )
             {
                 for(int j=0; j<8; j++)
@@ -136,10 +136,10 @@ int16_t CSharedMemoryCommunicationDevice::ReceiveStart(uint8_t *puiDestination,
                 i += 8;
             }
         }
-        m_puiClientToServerBuffer[0] = 0;
+        m_puiServerToClientBuffer[0] = 0;
 
         memcpy(puiDestination,
-               &m_puiClientToServerBuffer[1],
+               &m_puiServerToClientBuffer[1],
                uiLengthLocal);
 
         return uiLengthLocal;
@@ -158,15 +158,15 @@ int16_t CSharedMemoryCommunicationDevice::ReceiveContinue(uint8_t *puiDestinatio
 {
     std::cout << "CSharedMemoryCommunicationDevice::ReceiveContinue 1"  << std::endl;
 
-    uint16_t uiLengthLocal = m_puiClientToServerBuffer[0];
+    uint16_t uiLengthLocal = m_puiServerToClientBuffer[0];
 
     if (uiLengthLocal)
     {
         cout << "CSharedMemoryCommunicationDevice::ReceiveContinue 2" << endl;
         {
-            cout << "CSharedMemoryCommunicationDevice::ReceiveContinue m_puiClientToServerBuffer" << endl;
+            cout << "CSharedMemoryCommunicationDevice::ReceiveContinue m_puiServerToClientBuffer" << endl;
             unsigned char *pucSourceTemp;
-            pucSourceTemp = (unsigned char*)m_puiClientToServerBuffer;
+            pucSourceTemp = (unsigned char*)m_puiServerToClientBuffer;
             for(int i=0; i<32; )
             {
                 for(int j=0; j<8; j++)
@@ -177,10 +177,10 @@ int16_t CSharedMemoryCommunicationDevice::ReceiveContinue(uint8_t *puiDestinatio
                 i += 8;
             }
         }
-        m_puiClientToServerBuffer[0] = 0;
+        m_puiServerToClientBuffer[0] = 0;
 
         memcpy(puiDestination,
-               &m_puiClientToServerBuffer[1],
+               &m_puiServerToClientBuffer[1],
                uiLengthLocal);
 
         return uiLengthLocal;
@@ -197,26 +197,27 @@ int16_t CSharedMemoryCommunicationDevice::Write(uint8_t *puiSource, uint16_t uiL
 {
     std::cout << "CSharedMemoryCommunicationDevice::Write"  << std::endl;
 
-    memcpy(&m_puiServerToClientBuffer[1],
+    memcpy(&m_puiClientToServerBuffer[1],
            puiSource,
            uiLength);
 
-    m_puiServerToClientBuffer[0]  = uiLength;
+    m_puiClientToServerBuffer[0]  = uiLength;
 
+    {
+        cout << "CSharedMemoryCommunicationDevice::Write m_puiClientToServerBuffer" << endl;
+        unsigned char *pucSourceTemp;
+        pucSourceTemp = (unsigned char*)m_puiClientToServerBuffer;
+        for(int i=0; i<32; )
         {
-            cout << "CSharedMemoryCommunicationDevice::Write m_puiServerToClientBuffer" << endl;
-            unsigned char *pucSourceTemp;
-            pucSourceTemp = (unsigned char*)m_puiServerToClientBuffer;
-            for(int i=0; i<32; )
+            for(int j=0; j<8; j++)
             {
-                for(int j=0; j<8; j++)
-                {
-                    cout << hex << uppercase << setw(2) << setfill('0') << (unsigned int)pucSourceTemp[i + j] << " ";
-                }
-                cout << endl;
-                i += 8;
+                cout << hex << uppercase << setw(2) << setfill('0') << (unsigned int)pucSourceTemp[i + j] << " ";
             }
+            cout << endl;
+            i += 8;
         }
+    }
+
     return uiLength;
 }
 
