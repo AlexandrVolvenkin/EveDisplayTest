@@ -465,7 +465,8 @@ uint8_t CMainProductionCycle::Fsm(void)
 
     case READY:
         std::cout << "CMainProductionCycle::Fsm READY"  << std::endl;
-        SetFsmState(DATABASE_CHECK_TASK_READY_CHECK);
+//        SetFsmState(DATABASE_CHECK_TASK_READY_CHECK);
+        SetFsmState(MODBUS_MASTER_SEND_MESSAGE);
         break;
 
     case DATABASE_CHECK_TASK_READY_CHECK:
